@@ -28,3 +28,7 @@ jobs:
           # or if using AWS credentials directly
           AWS_ACCESS_KEY_ID: ${{ secrets.access_key }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.secret_access }}
+      - name: Install modules
+        run: yarn
+      - name: deploy
+        run: sls deploy --stage=dev --region=us-east-1
