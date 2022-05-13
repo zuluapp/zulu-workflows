@@ -1,0 +1,37 @@
+name: Deploy
+
+on:
+  workflow_call:
+    secrets:
+      rockeset-token:
+        required: true
+      access_key:
+        required: true
+      secret_access:
+        required: true
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    env:
+      ROCKESET_API_KEY: ${{ secrets.rockeset-token }}
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - name: serverless deploy
+        uses: serverless/github-action@v3
+        with:
+          args: deploy
+        env:
+          #SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+          # or if using AWS credentials directly
+          AWS_ACCESS_KEY_ID: ${{ secrets.access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.secret_access }}
