@@ -1,0 +1,29 @@
+name: Build security
+
+on:
+  workflow_call:
+    secrets:
+      github-token:
+        required: true
+      sonar:
+        required: true
+
+jobs:
+  sonar-cloud:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: yarn
+
+      - name: ESLint
+        run: npx eslint . --ext .js,.jsx,.ts,.tsx
+
+      - name: Run test-coverage
+        run: npm run test-coverage
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.github-token }}
+          SONAR_TOKEN: ${{ secrets.sonar }}
