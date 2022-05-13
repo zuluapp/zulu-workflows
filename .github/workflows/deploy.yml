@@ -1,0 +1,20 @@
+name: Deploy
+
+on:
+  workflow_call:
+    secrets:
+      rockeset-token:
+        required: true
+      access_key:
+        required: true
+      secret_access:
+        required: true
+
+jobs:
+  deploy:
+    name: deploy
+    runs-on: ubuntu-latest
+    env:
+      ROCKESET_API_KEY: ${{ secrets.rockeset-token }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.access_key }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.secret_access }}
