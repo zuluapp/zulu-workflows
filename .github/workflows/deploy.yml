@@ -2,6 +2,10 @@ name: Deploy
 
 on:
   workflow_call:
+    inputs:
+      stage:
+        required: true
+        type: string
     secrets:
       rockeset-token:
         required: true
@@ -43,4 +47,4 @@ jobs:
       - name: Serverless Authentication
         run: sls config credentials --provider aws --key ${{ secrets.access_key }} --secret ${{ secrets.secret_access }} --profile zulu
       - name: Deploy to AWS
-        run: sls deploy --stage=dev --region=us-east-1 --verbose
+        run: sls deploy --stage=${{inputs.stage}} --region=us-east-1 --verbose
