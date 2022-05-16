@@ -1,46 +1,42 @@
-name: Deploy
+name: Deploy serverless
 
 on:
   workflow_call:
+    inputs:
+      env_stage:
+        required: true
+        type: string
+      aws_region:
+        required: true
+        type: string
     secrets:
-      rockeset-token:
+      rockeset_token:
         required: true
-      access_key:
+      aws_access_key:
         required: true
-      secret_access:
-        required: true
-      serverless_access_key:
+      aws_secret_access_key:
         required: true
 
 jobs:
-  deploy:
-    name: deploy
+  deploy-serverless:
+    name: deploy serverless
     runs-on: ubuntu-latest
-    env:
-      ROCKESET_API_KEY: ${{ secrets.rockeset-token }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.access_key }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.secret_access }}
-      SERVERLESS_ACCESS_KEY: ${{ secrets.serverless_access_key }}
+
     strategy:
       matrix:
         node-version: [16.x]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install modules
-        run: yarn
-      - name: Install Serverless Framework
-        run: npm install -g serverless
-      - name: Create env file
-        run: |
-              touch .env
-              echo ROCKESET_API_KEY= ${{ secrets.rockeset-token }} >> .env
-              echo SERVERLESS_ACCESS_KEY= ${{ secrets.serverless_access_key }} >> .env
-              cat .env
-      - name: Serverless Authentication
-        run: sls config credentials --provider aws --key ${{ secrets.access_key }} --secret ${{ secrets.secret_access }} --profile zulu
-      - name: Deploy to AWS
-        run: sls deploy --stage=dev --region=us-east-1 --verbose
+
+      - name: serverless deploy
+        uses: serverless/github-action@v2
+        with:
+          args: deploy --stage=${{ inputs.env_stage }} --region=${{ inputs.aws_region }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
