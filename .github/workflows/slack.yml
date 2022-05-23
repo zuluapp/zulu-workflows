@@ -1,0 +1,22 @@
+name: Slack Notification
+
+on:
+  workflow_call:
+
+jobs:
+  slackNotification:
+    name: Message
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Message
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
+          SLACK_USERNAME: ${{ secrets.SLACK_USERNAME }}
+          SLACK_ICON: https://avatars.githubusercontent.com/u/96034374?s=48
+          SLACK_COLOR: ${{ job.status }}
+          SLACK_MESSAGE: ${{ secrets.SLACK_MESSAGE }}
+          SLACK_TITLE: ${{ secrets.SLACK_TITLE }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
