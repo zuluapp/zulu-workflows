@@ -10,8 +10,6 @@ on:
         required: true
         type: string
     secrets:
-      rockeset_token:
-        required: true
       aws_access_key:
         required: true
       aws_secret_access_key:
