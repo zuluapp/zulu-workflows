@@ -17,12 +17,13 @@ on:
 
 jobs:
   deploy-serverless:
-    name: deploy serverless
+    name: deploy serverless ${{ inputs.env_stage }}
     runs-on: ubuntu-latest
+    environment: ${{ inputs.env_stage }}
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [14.x]
     steps:
       - uses: actions/checkout@v3
 
@@ -32,9 +33,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: serverless deploy
-        uses: serverless/github-action@v2
+        uses: serverless/github-action@v3
         with:
-          args: deploy --stage=${{ inputs.env_stage }} --region=${{ inputs.aws_region }}
+          args: deploy --stage=${{ inputs.env_stage }} --region=${{ inputs.aws_region }} --verbose
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
