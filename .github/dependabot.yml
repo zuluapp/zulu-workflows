@@ -3,7 +3,7 @@
 ---
 version: 2
 updates:
-# Target default branch
+  # Target default branch
   # Maintain dependencies for js with npm
   - package-ecosystem: "npm"
     directory: "/"
