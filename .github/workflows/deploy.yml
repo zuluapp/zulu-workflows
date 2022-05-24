@@ -2,11 +2,6 @@ name: Deploy serverless
 
 on:
   workflow_call:
-    secrets:
-      AWS_ACCESS_KEY_ID:
-        required: true
-      AWS_SECRET_ACCESS_KEY:
-        required: true
     inputs:
       env_stage:
         required: true
@@ -17,6 +12,11 @@ on:
       url_zulu:
         required: false
         type: string
+    secrets:
+      aws_access_key:
+        required: true
+      aws_secret_access_key:
+        required: true
 
 jobs:
   deploy-serverless:
@@ -42,5 +42,5 @@ jobs:
         with:
           args: deploy --stage=${{ inputs.env_stage }} --region=${{ inputs.aws_region }} --verbose
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
