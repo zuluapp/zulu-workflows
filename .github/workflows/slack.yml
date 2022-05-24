@@ -2,6 +2,21 @@ name: Slack Notification
 
 on:
   workflow_call:
+    secrets:
+      SLACK_CHANNEL:
+        required: true
+      SLACK_USERNAME:
+        required: true
+      SLACK_ICON:
+        required: true
+      SLACK_COLOR:
+        required: true
+      SLACK_MESSAGE:
+        required: true
+      SLACK_TITLE:
+        required: true
+      SLACK_WEBHOOK:
+        required: true
 
 jobs:
   slackNotification:
@@ -10,13 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Message
+      - name: Slack Notification
         uses: rtCamp/action-slack-notify@v2
         env:
-          SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
-          SLACK_USERNAME: ${{ secrets.SLACK_USERNAME }}
-          SLACK_ICON: https://avatars.githubusercontent.com/u/96034374?s=48
+          SLACK_CHANNEL: ${{ secret.SLACK_CHANNEL }}
+          SLACK_USERNAME: ${{ secret.SLACK_USERNAME }}
+          SLACK_ICON: ${{ secret.SLACK_ICON }}
           SLACK_COLOR: ${{ job.status }}
-          SLACK_MESSAGE: ${{ secrets.SLACK_MESSAGE }}
-          SLACK_TITLE: ${{ secrets.SLACK_TITLE }}
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: ${{ secret.SLACK_MESSAGE }}
+          SLACK_TITLE: ${{ secret.SLACK_TITLE }}
+          SLACK_WEBHOOK: ${{ secret.SLACK_WEBHOOK }}
